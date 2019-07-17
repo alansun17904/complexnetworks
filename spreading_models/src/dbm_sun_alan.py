@@ -1,6 +1,5 @@
-from node import Node
 import pprint
-from deterministic import DeterministicGraph
+from .deterministic import DeterministicGraph
 
 
 def read_graph(path):
@@ -28,7 +27,6 @@ def make_adj_matrix(num_nodes, edges):
 if __name__ == '__main__':
     g = read_graph('../data/dbm_graded_input.txt')
     adj = make_adj_matrix(g[0], g[3])
-    pprint.pprint(adj)
     d = DeterministicGraph(g[1], g[2], adj)
     d.initialize_nodes()
     for time in d.spread():
