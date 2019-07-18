@@ -1,4 +1,4 @@
-from .graph import Graph
+from graph import Graph
 
 
 class DeterministicGraph(Graph):
@@ -9,18 +9,13 @@ class DeterministicGraph(Graph):
         """
         :param q: The minimum percentage of adjacent nodes for the current node to be infected.
         :param starting_nodes: A list of ints with the names of the starting nodes
-        :param adj_matrix: A two-dimensional adjacency matrix
+        :param num_nodes: The number of nodes in the matrix
+        :param edge_tuple: a tuple or list of edges [(a, b), (b, c)] where a and b are node numbers
         """
-        super().__init__(num_nodes, edge_tuple, directed=False)
+        super(DeterministicGraph, self).__init__(num_nodes, edge_tuple, directed=False)
         self.starting_nodes = starting_nodes
         self.q = q
-
-    def _initialize_nodes(self):
-        """
-        Converts adjacency matrix into node objects, appends them to the nodes attribute.
-        :return: 1 if successful
-        """
-        super()._initialize_nodes()
+        # Initialize the state of the nodes with the starting_nodes list
         for node in self.nodes:
             if node.name in self.starting_nodes:
                 node.state = 1
