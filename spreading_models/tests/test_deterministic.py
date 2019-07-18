@@ -1,4 +1,4 @@
-from spreading_models.tests.context import *
+from .context import models
 import pytest
 
 

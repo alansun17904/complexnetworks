@@ -1,4 +1,4 @@
-from deterministic import DeterministicGraph
+from .deterministic import DeterministicGraph
 import os
 
 

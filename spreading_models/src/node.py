@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self, name, state, adjacent_nodes):
+    def __init__(self, name, adjacent_nodes, state=0):
         self.name = name
         self.state = state
         self.adjancent_nodes = adjacent_nodes
@@ -11,4 +11,4 @@ class Node:
             self.pending_state = None
 
     def __str__(self):
-        return self.name
+        return f'{self.name}: <{self.adjancent_nodes}>'

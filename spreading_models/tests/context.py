@@ -5,4 +5,4 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
-import spreading_models.src as models
+import src as models

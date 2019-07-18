@@ -1,48 +1,36 @@
-from node import Node
+from .graph import Graph
 
 
-class DeterministicGraph:
+class DeterministicGraph(Graph):
     """
     Models the determinisitc model of a node.
     """
     def __init__(self, q, starting_nodes, adj_matrix):
         """
-
         :param q: The minimum percentage of adjacent nodes for the current node to be infected.
-        :param starting_nodes:
-        :param adj_matrix:
+        :param starting_nodes: A list of ints with the names of the starting nodes
+        :param adj_matrix: A two-dimensional adjacency matrix
         """
-        self.q = q
+        super().__init__(adj_matrix, directed=False)
         self.starting_nodes = starting_nodes
-        self.adj = adj_matrix
-        self.nodes = []
+        self.q = q
 
-    def initialize_nodes(self):
+    def _initialize_nodes(self):
         """
-
-        :return:
+        Converts adjacency matrix into node objects, appends them to the nodes attribute.
+        :return: 1 if successful
         """
-        for rindex, row in enumerate(self.adj):
-            adj_nodes = [adj_index for adj_index, value in enumerate(self.adj[rindex]) if value == 1]
-            state = 1 if rindex in self.starting_nodes else 0
-            self.nodes.append(Node(rindex, state, adj_nodes))
-        return 1
-
-    def filter_node(self, node_name):
-        """
-        Returns the node object given the node_name in the graph.
-        :param node_name: The name of the node.
-        :return: Node object.
-        """
-        return list(filter(lambda n: n.name == node_name, self.nodes))[0]
+        super()._initialize_nodes()
+        for node in self.nodes:
+            if node.name in self.starting_nodes:
+                node.state = 1
 
     def decide(self, node):
         """
-
         :param node: A node object that is being infected.
         :return: 1 if the target node is infected and 0 if the target node is not infected.
         """
-        total_infected = len([n for n in node.adjancent_nodes if self.filter_node(n).state == 1])
+        total_infected = len([n for n in node.adjancent_nodes if self.get_node(n).state == 1])
         if self.q <= total_infected / len(node.adjancent_nodes):
             node.pending_state = 1
             return 1
