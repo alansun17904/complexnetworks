@@ -5,13 +5,13 @@ class DeterministicGraph(Graph):
     """
     Models the determinisitc model of a node.
     """
-    def __init__(self, q, starting_nodes, adj_matrix):
+    def __init__(self, q, starting_nodes, num_nodes, edge_tuple):
         """
         :param q: The minimum percentage of adjacent nodes for the current node to be infected.
         :param starting_nodes: A list of ints with the names of the starting nodes
         :param adj_matrix: A two-dimensional adjacency matrix
         """
-        super().__init__(adj_matrix, directed=False)
+        super().__init__(num_nodes, edge_tuple, directed=False)
         self.starting_nodes = starting_nodes
         self.q = q
 
@@ -50,11 +50,12 @@ class DeterministicGraph(Graph):
             previous_infected = time_table[-1][1].copy()
             # combine previously infected nodes with nodes infected in this time period
             previous_infected.update(current_infection)
+            # add the new time to the time table
             time_table.append((time, previous_infected))
             for node in self.nodes:
                 node.flip_pending_state()
             if time_table[-1][1] == time_table[-2][1]:  # if there is no state change between current and last time
-                return time_table[:len(time_table) - 1]
+                return time_table[:len(time_table) - 1]  # return the time_table without the two repeating end states
 
 
 
