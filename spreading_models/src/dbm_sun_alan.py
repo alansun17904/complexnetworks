@@ -33,6 +33,9 @@ if __name__ == '__main__':
         print(f't{time[0]}: {infected_at_t}')
         # so does not change the previous comparison time when subtracted
         previous_set = time[1].copy()
-    print(f't{time_table[-1][0] + 1}: []')
-    print(f'Final: {[v + g[4] for v in list(time_table[-1][1])]}')
+    print(f't{time[0] + 1}: []')
+    # add starting node to final list
+    final = [node_label + g[4] for node_label in list(time[1])]
+    final.sort()
+    print(f'Final: {final}')
 

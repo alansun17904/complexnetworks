@@ -3,7 +3,7 @@ from graph import Graph
 
 class DeterministicGraph(Graph):
     """
-    Models the determinisitc model of a node.
+    Models the deterministic model of a node.
     """
     def __init__(self, q, starting_nodes, num_nodes, edge_tuple):
         """
@@ -22,7 +22,7 @@ class DeterministicGraph(Graph):
 
     def decide(self, node):
         """
-        :param node: A node object that is being infected.
+        :param node: The node object that is being infected.
         :return: 1 if the target node is infected and 0 if the target node is not infected.
         """
         total_infected = len([n for n in node.adjancent_nodes if self.get_node(n).state == 1])
@@ -37,6 +37,7 @@ class DeterministicGraph(Graph):
         time_table = [(time, set(self.starting_nodes))]
         while still_spreading:
             current_infection = self.starting_nodes.copy()
+            # TODO: only loop through nodes that are adjacent to infected nodes not all nodes
             for node in list(filter(lambda n: n.name not in time_table[-1][1], self.nodes)):
                 infected = self.decide(node)
                 if infected:
@@ -47,8 +48,8 @@ class DeterministicGraph(Graph):
             previous_infected.update(current_infection)
             # add the new time to the time table
             time_table.append((time, previous_infected))
-            for node in self.nodes:
-                node.flip_pending_state()
+            for node in current_infection:
+                self.get_node(node).flip_pending_state()
             if time_table[-1][1] == time_table[-2][1]:  # if there is no state change between current and last time
                 return time_table[:len(time_table) - 1]  # return the time_table without the two repeating end states
 
