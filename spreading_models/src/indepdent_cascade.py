@@ -1,5 +1,4 @@
 from graph import Graph
-import random
 
 
 class IndependentCascade(Graph):
@@ -39,22 +38,28 @@ class IndependentCascade(Graph):
         """
         if self.directed and node2 is None:
             raise RuntimeError("Need to give both node1 and node2 to search for edge in directed graph.")
-        for edge in self.edges:
-            if self.directed:
-                if node1 == edge.node1 and node2 == edge.node2:
+        elif self.directed:
+            for edge in self.edges:
+                if edge.node1 == node1 and edge.node2 == node2:
                     return edge
-            else:
-                if node1 == edge.node1 and node2 == edge.node2 or \
-                   node2 == edge.node1 and node1 == edge.node2:
-                   return edge
+        else:
+            for edge in self.edges:
+                if edge.node1 == node1 and edge.node2 == node2 or edge.node1 == node2 and edge.node2 == node1:
+                    return edge
 
     def decide(self, node):
         adj_nodes = [self.get_node(adj) for adj in node.adjancent_nodes]
+        # check if all adjacent nodes are not infected
+        infected_adjacent = [n for n in adj_nodes if n.state == 1]
+        if len(infected_adjacent) == adj_nodes:
+            return 0
         edges = [self.get_edge(node, adj_node) for adj_node in adj_nodes]
+        # if all adjacent nodes are infected and the node itself is infected it is redundant
+        # to check if other nodes are still able to infect those nodes
+        cancel_all_connections_when_infected = len(adj_nodes) == infected_adjacent
         for edge in edges:
-            t = edge.flip_coin()
-            if t:
-                if len(adj_nodes) == [n for n in adj_nodes if n.state == 1]:
+            if edge.flip_coin():
+                if cancel_all_connections_when_infected:
                     for adj_node in adj_nodes:
                         adj_node.cant_use = True
                 edge.cant_use = True

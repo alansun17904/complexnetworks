@@ -1,4 +1,5 @@
 from indepdent_cascade import IndependentCascade
+from random import randint
 
 
 def read_independent_graph(path):
@@ -28,9 +29,10 @@ def read_independent_graph(path):
 
 if __name__ == '__main__':
     g = read_independent_graph('../data/icm_graded_input.txt')
-    icm = IndependentCascade(g[1], g[0], g[3])
     cases = []
-    for i in range(10000):
-        cases.append(len(icm.spread()[-1][1]))
-        icm.reset()
+    for j in range(10000):
+        icm = IndependentCascade([randint(0, 5), randint(0, 5), randint(0, 5)], g[0], g[3])
+        for i in range(50):
+            cases.append(len(icm.spread()[-1][1]))
+            icm.reset()
     print(sum(cases) / len(cases))
