@@ -54,7 +54,7 @@ class IndependentCascade(Graph):
         infected_edges = []
         for adj_node in adj_nodes:
             e = self.get_edge(node, adj_node)
-            if e.node1.state == 1 or e.node2.state == 1 and not e.cant_use:
+            if (e.node1.state == 1 or e.node2.state == 1) and not e.cant_use:
                 infected_edges.append(e)
         # if all adjacent nodes are infected and the node itself is infected it is redundant
         # to check if other nodes are still able to infect those nodes

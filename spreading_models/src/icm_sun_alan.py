@@ -28,9 +28,8 @@ def read_independent_graph(path):
 
 
 if __name__ == '__main__':
-    g = read_independent_graph('../data/icm_graded_input.txt')
+    g = read_independent_graph('../data/n.txt')
     icm = IndependentCascade(g[1], g[0], g[3])
-    # print(icm.spread())
     for run in g[2]:
         cases = []
         for i in range(run):
