@@ -51,18 +51,17 @@ class IndependentCascade(Graph):
         adj_nodes = [self.get_node(adj) for adj in node.adjancent_nodes]
         # check if all adjacent nodes are not infected
         infected_adjacent = [n for n in adj_nodes if n.state == 1]
-        if len(infected_adjacent) == adj_nodes:
-            return 0
-        edges = [self.get_edge(node, adj_node) for adj_node in adj_nodes]
+        infected_edges = []
+        for adj_node in adj_nodes:
+            e = self.get_edge(node, adj_node)
+            if e.node1.state == 1 or e.node2.state == 1 and not e.cant_use:
+                infected_edges.append(e)
         # if all adjacent nodes are infected and the node itself is infected it is redundant
         # to check if other nodes are still able to infect those nodes
-        cancel_all_connections_when_infected = len(adj_nodes) == infected_adjacent
-        for edge in edges:
+        for edge in infected_edges:
             if edge.flip_coin():
-                if cancel_all_connections_when_infected:
-                    for adj_node in adj_nodes:
-                        adj_node.cant_use = True
-                edge.cant_use = True
+                for edge in infected_edges:
+                    edge.cant_use = True
                 node.pending_state = 1
                 return 1
             else:
@@ -80,7 +79,7 @@ class IndependentCascade(Graph):
         while still_spreading:
             # terminating conditions:
             # all edges are used
-            current_infection = self.starting_nodes.copy()
+            current_infection = []
             for node in [n for n in self.nodes if n.state != 1]:
                 if self.decide(node):
                     current_infection.append(node.name)
@@ -103,3 +102,7 @@ class IndependentCascade(Graph):
                 node.state = 1
         for edge in self.edges:
             edge.cant_use = False
+
+
+# TODO: make edges searchable by a special key in dictionary
+# TODO: change the edges list into dict data structure

@@ -14,4 +14,4 @@ class Edge:
         self.cant_use = False
 
     def flip_coin(self):
-        return True if random.random() < self.q else False
+        return True if random.random() <= self.q else False

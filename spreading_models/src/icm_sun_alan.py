@@ -1,5 +1,5 @@
 from indepdent_cascade import IndependentCascade
-from random import randint
+# from random import randint
 
 
 def read_independent_graph(path):
@@ -29,10 +29,13 @@ def read_independent_graph(path):
 
 if __name__ == '__main__':
     g = read_independent_graph('../data/icm_graded_input.txt')
-    cases = []
-    for j in range(10000):
-        icm = IndependentCascade([randint(0, 5), randint(0, 5), randint(0, 5)], g[0], g[3])
-        for i in range(50):
+    icm = IndependentCascade(g[1], g[0], g[3])
+    # print(icm.spread())
+    for run in g[2]:
+        cases = []
+        for i in range(run):
             cases.append(len(icm.spread()[-1][1]))
+            average = round(sum(cases) / len(cases), 3)
             icm.reset()
-    print(sum(cases) / len(cases))
+        print(f'{run} run average: {average} nodes infected, '
+              f'proportion = {round(average / g[0], 3)}')
