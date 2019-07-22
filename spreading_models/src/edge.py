@@ -2,7 +2,7 @@ import random
 
 
 class Edge:
-    def __init__(self, node1, node2, q=0):
+    def __init__(self, node1, node2, q=0, directed=False):
         """
         :param node1: Node object
         :param node2: Node object
@@ -12,6 +12,7 @@ class Edge:
         self.node2 = node2
         self.q = q  # weight of the edge / probability
         self.cant_use = False
+        self.directed = directed
 
     def flip_coin(self):
         return True if random.random() <= self.q else False

@@ -9,9 +9,10 @@ class Graph:
     def __init__(self, num_nodes, edge_tuple, directed=False):
         self.num_nodes = num_nodes
         self.edge_tuple = edge_tuple
-        self.nodes = []
+        self.nodes = {}
         self.edges = []
         self.directed = directed
+        self.edge_dict = {}
         self._make_adj_matrix()
         self._initialize_nodes()
         self._initialize_edges()
@@ -26,26 +27,24 @@ class Graph:
                 self.adj[edge[0]][edge[1]] = 1
         return self.adj
 
-    def get_node(self, node_name):
-        return [n for n in self.nodes if n.name == node_name][0]
-
     def _initialize_nodes(self):
         for rindex, row in enumerate(self.adj):
             # find nodes that are adjacent to the current node.
             adj_nodes = [adj_index for adj_index, value in enumerate(self.adj[rindex]) if value == 1]
-            self.nodes.append(Node(rindex, adj_nodes))
+            self.nodes[rindex] = Node(rindex, adj_nodes)
         return 1
 
     def _initialize_edges(self):
         if self.directed:  # in directed graphs the order matters so must loop through entire matrix
-            for node in self.nodes:
+            for node in self.nodes.values():
                 for adj_node in node.adjancent_nodes:
-                    self.edges.append(Edge(node, self.get_node(adj_node)))
+                    self.edges.append(Edge(node, self.nodes[adj_node], directed=True))
         else:
             # loop through only half of the matrix not including the diagonal
             for row in range(len(self.adj)):
                 for col in range(row, len(self.adj[row])):
                     # add Edge objects to self.edge
                     if self.adj[row][col] == 1:
-                        self.edges.append(Edge(self.get_node(row), self.get_node(col)))
+                        self.edges.append(Edge(self.nodes[row], self.nodes[col]))
+
 

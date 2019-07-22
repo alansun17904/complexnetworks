@@ -13,7 +13,7 @@ class IndependentCascade(Graph):
         self.edge_prob = edge_tuple_with_prob
         super(IndependentCascade, self).__init__(num_nodes, edge_tuple_with_prob, directed=False)
         self.starting_nodes = starting_nodes
-        for node in self.nodes:
+        for node in self.nodes.values():
             if node.name in self.starting_nodes:
                 node.state = 1
 
@@ -48,7 +48,7 @@ class IndependentCascade(Graph):
                     return edge
 
     def decide(self, node):
-        adj_nodes = [self.get_node(adj) for adj in node.adjancent_nodes]
+        adj_nodes = [self.nodes[adj] for adj in node.adjancent_nodes]
         # check if all adjacent nodes are not infected
         infected_adjacent = [n for n in adj_nodes if n.state == 1]
         infected_edges = []
@@ -80,7 +80,7 @@ class IndependentCascade(Graph):
             # terminating conditions:
             # all edges are used
             current_infection = []
-            for node in [n for n in self.nodes if n.state != 1]:
+            for node in [n for n in self.nodes.values() if n.state != 1]:
                 if self.decide(node):
                     current_infection.append(node.name)
             time += 1
@@ -89,13 +89,13 @@ class IndependentCascade(Graph):
             previous_infected.update(current_infection)
             time_table.append((time, previous_infected))
             for node in current_infection:
-                self.get_node(node).flip_pending_state()
+                self.nodes[node].flip_pending_state()
             if time_table[-1][1] == time_table[-2][1]:  # if there is no state change between current and last time
                 return time_table[:len(time_table) - 1]  # return the time_table without the two repeating end states
         return time_table
 
     def reset(self):
-        for node in self.nodes:
+        for node in self.nodes.values():
             if node.name not in self.starting_nodes:
                 node.state = 0
             else:
