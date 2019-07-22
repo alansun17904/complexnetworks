@@ -4,7 +4,6 @@ from graph import Graph
 class IndependentCascade(Graph):
     def __init__(self, starting_nodes, num_nodes, edge_tuple_with_prob):
         """
-        Constructor
         :param starting_nodes: list of the indices of nodes that are initially infected
         :param num_nodes: the number of nodes in the graph
         :param edge_tuple_with_prob: list of Tuple or List that follows the following structure
@@ -26,6 +25,8 @@ class IndependentCascade(Graph):
                         edge.q = prob[2]
             else:
                 for prob in self.edge_prob:
+                    # add the probability weighting to each edge object if the start and end nodes
+                    # are same as the edge object
                     if prob[0] == edge.node1.name and prob[1] == edge.node2.name or \
                        prob[1] == edge.node1.name and prob[0] == edge.node2.name:
                         edge.q = prob[2]
@@ -40,14 +41,21 @@ class IndependentCascade(Graph):
             raise RuntimeError("Need to give both node1 and node2 to search for edge in directed graph.")
         elif self.directed:
             for edge in self.edges:
+                # for directed graphs order of the start and end nodes matter
                 if edge.node1 == node1 and edge.node2 == node2:
                     return edge
         else:
             for edge in self.edges:
+                # check if the end points of the edges match the end points of the edge object
                 if edge.node1 == node1 and edge.node2 == node2 or edge.node1 == node2 and edge.node2 == node1:
                     return edge
 
     def decide(self, node):
+        """
+        Decides if a node gets infected or not based on the probability of the adjacent edges.
+        :param node: Node object, the node that is being calculated
+        :return: 1 if the target node is infected and 0 if the target node is not infected
+        """
         adj_nodes = [self.nodes[adj] for adj in node.adjancent_nodes]
         # check if all adjacent nodes are not infected
         infected_adjacent = [n for n in adj_nodes if n.state == 1]
@@ -62,6 +70,7 @@ class IndependentCascade(Graph):
             if edge.flip_coin():
                 for edge in infected_edges:
                     edge.cant_use = True
+                # set node's pending state so that it can be changed in the next time
                 node.pending_state = 1
                 return 1
             else:
@@ -95,6 +104,11 @@ class IndependentCascade(Graph):
         return time_table
 
     def reset(self):
+        """
+        Reset all nodes to starting state by setting the states of all nodes except for the starting nodes back
+        to 1. Set all the state of the edges back to `can use`.
+        :return: None
+        """
         for node in self.nodes.values():
             if node.name not in self.starting_nodes:
                 node.state = 0

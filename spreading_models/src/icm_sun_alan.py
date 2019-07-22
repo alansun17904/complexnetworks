@@ -30,9 +30,9 @@ def read_independent_graph(path):
 if __name__ == '__main__':
     g = read_independent_graph('../data/n.txt')
     icm = IndependentCascade(g[1], g[0], g[3])
-    for run in [1]:
+    for run in g[2]:
         cases = []
-        for i in range(10000):
+        for i in range(run):
             cases.append(len(icm.spread()[-1][1]))
             average = round(sum(cases) / len(cases), 3)
             icm.reset()
