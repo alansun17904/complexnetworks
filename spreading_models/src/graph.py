@@ -7,6 +7,13 @@ class Graph:
     Generic class for a graph
     """
     def __init__(self, num_nodes, edge_tuple, directed=False):
+        """
+
+        :param num_nodes: Number of nodes in the graph
+        :param edge_tuple: A list of tuples or lists that contains the start and end nodes that make up
+        the edges.
+        :param directed: True if the graph is directed, False if the graph is not directed.
+        """
         self.num_nodes = num_nodes
         self.edge_tuple = edge_tuple
         self.nodes = {}
