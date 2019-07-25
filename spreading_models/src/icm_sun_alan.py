@@ -27,11 +27,11 @@ def read_independent_graph(path):
 
 
 if __name__ == '__main__':
-    g = read_independent_graph('../data/expected1.txt')
+    g = read_independent_graph('../data/n.txt')
     icm = IndependentCascade(g[1], g[0], g[3])
     for run in [0]:
         cases = []  # stores the data from each run
-        for i in range(1000000):
+        for i in range(1000):
             cases.append(len(icm.spread()[-1][1]))  # number of nodes that ended up being infected
             icm.reset()
         average = round(sum(cases) / len(cases), 3)

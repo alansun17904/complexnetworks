@@ -43,20 +43,22 @@ def process_csn(comma_spaced_string):
 # execute each run and returns the number of nodes infected in the end
 def run(node_list, edge_list):
     edge_list = edge_list.copy()
-    t = 0
-    infected_nodes = set(node_list)
-    currently_infected = set()
-    while len(infected_nodes - currently_infected) != 0:
-        previously_infected = infected_nodes.copy() if t == 0 else currently_infected.copy()
-        currently_infected = set()
-        for node in previously_infected:
+    time_table = {0: set(node_list)}
+    still_spreading = True
+    while still_spreading:
+        infected = set()
+        for node in time_table[len(time_table) - 1]:
+            if node not in edge_list:
+                continue
             for edge in edge_list[node]:
-                if edge[0] not in infected_nodes:
+                if edge[0] not in time_table[len(time_table) - 1]:
                     if random.random() <= edge[1]:
-                        currently_infected.update([edge[0]])
+                        infected.update([edge[0]])
                     edge_list[node].remove(edge)
-        infected_nodes.update(currently_infected)
-    return len(infected_nodes)
+        if len(infected) == 0:
+            break
+        time_table[len(time_table)] = infected
+    return sum([len(v) for v in time_table.values()])
 
 
 if __name__ == '__main__':
